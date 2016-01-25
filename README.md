@@ -21,6 +21,13 @@
   ]
 }
 ```
+
+### Concept
+```
+parser.get("friends[*].name") -> ["Santiago Mcmillan", "Graham Zimmerman", "Tabatha Garrison"]
+```
+
+
 ### Prepare
 ```java
 String payload = readPayload();
