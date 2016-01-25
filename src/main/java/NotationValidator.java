@@ -53,8 +53,6 @@ public class NotationValidator {
         Token<NotationTokenType> word = tokens.remove(0);
         if (word.token.equals(NotationTokenType.LP)) {
             return LP(tokens);
-        } else if (word.token.equals(NotationTokenType.IDENT)) {
-            return ident(tokens);
         } else if (word.token.equals(NotationTokenType.DOT)) {
             return dot(tokens);
         }

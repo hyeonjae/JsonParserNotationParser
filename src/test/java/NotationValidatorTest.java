@@ -66,5 +66,9 @@ public class NotationValidatorTest {
         String nodation7 = "aaa[b]";
         boolean v7 = NotationValidator.parse(this.notationTokenizer.getTokens(nodation7));
         Assert.assertFalse(v7);
+
+        String nodation8 = "aaa[1]a";
+        boolean v8 = NotationValidator.parse(this.notationTokenizer.getTokens(nodation8));
+        Assert.assertFalse(v8);
     }
 }
