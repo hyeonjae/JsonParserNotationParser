@@ -84,7 +84,7 @@ public class JsonNodeParser {
         }
     }
 
-    public List<String> parse(List<Token<NotationTokenType>> tokens) {
+    private List<String> parse(List<Token<NotationTokenType>> tokens) {
         List<String> results = new ArrayList<>();
         try {
             Token<NotationTokenType> word = tokens.remove(0);
