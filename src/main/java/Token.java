@@ -1,9 +1,9 @@
 public class Token<T> {
-    public final T token;
-    public final String sequence;
+    public final T type;
+    public final String value;
 
-    public Token(T token, String sequence) {
-        this.token = token;
-        this.sequence = sequence;
+    public Token(T type, String value) {
+        this.type = type;
+        this.value = value;
     }
 }

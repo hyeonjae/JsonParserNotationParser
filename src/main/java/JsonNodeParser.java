@@ -88,8 +88,8 @@ public class JsonNodeParser {
         List<String> results = new ArrayList<>();
         try {
             Token<NotationTokenType> word = tokens.remove(0);
-            if (word.token.equals(NotationTokenType.IDENT)) {
-                results.addAll(ident(root.path(word.sequence), tokens));
+            if (word.type.equals(NotationTokenType.IDENT)) {
+                results.addAll(ident(root.path(word.value), tokens));
                 return results;
             } else {
                 return Collections.emptyList();
@@ -110,9 +110,9 @@ public class JsonNodeParser {
             return results;
         }
         Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.DOT)) {
+        if (word.type.equals(NotationTokenType.DOT)) {
             return dot(sub, tokens);
-        } else if (word.token.equals(NotationTokenType.LP)) {
+        } else if (word.type.equals(NotationTokenType.LP)) {
             return LP(sub, tokens);
         }
         return Collections.emptyList();
@@ -121,16 +121,16 @@ public class JsonNodeParser {
     private List<String> dot(JsonNode sub, List<Token<NotationTokenType>> tokens) {
 
         Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.IDENT)) {
-            return ident(sub.path(word.sequence), tokens);
+        if (word.type.equals(NotationTokenType.IDENT)) {
+            return ident(sub.path(word.value), tokens);
         }
         return Collections.emptyList();
     }
 
     private List<String> LP(JsonNode sub, List<Token<NotationTokenType>> tokens) {
         Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.INDEX)) {
-            return index(sub, tokens, word.sequence);
+        if (word.type.equals(NotationTokenType.INDEX)) {
+            return index(sub, tokens, word.value);
         }
         return Collections.emptyList();
     }
@@ -138,7 +138,7 @@ public class JsonNodeParser {
     private List<String> index(JsonNode sub, List<Token<NotationTokenType>> tokens, String index) {
         List<String> results = new ArrayList<>();
         Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.RP)) {
+        if (word.type.equals(NotationTokenType.RP)) {
             if (index.equals(ALL)) {
                 int size = sub.size();
 
@@ -166,9 +166,9 @@ public class JsonNodeParser {
             return results;
         }
         Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.LP)) {
+        if (word.type.equals(NotationTokenType.LP)) {
             return LP(sub, tokens);
-        } else if (word.token.equals(NotationTokenType.DOT)) {
+        } else if (word.type.equals(NotationTokenType.DOT)) {
             return dot(sub, tokens);
         }
         return Collections.emptyList();

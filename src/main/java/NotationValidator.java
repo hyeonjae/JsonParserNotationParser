@@ -1,61 +1,164 @@
 import java.util.List;
+import java.util.ArrayList;
 
 public class NotationValidator {
+    /*
+        Notation    -> Slices
+                     | Slices DOT SubNotation
+                     | SubNotation
+        Slices      -> Slice
+                     | Slice Slices
+        SubNotation -> Key
+                     | Key DOT SubNotation
+        Key         -> IDENT Key`
+        Key`        -> Slice Key`
+                     | e
+        Slice       -> LP INDEX RP
+        IDENT        -> [a-zA-Z]+
+        INDEX       -> [0-9]+
+                     | *
+        DOT         -> .
+        LP          -> [
+        RP          -> ]
+     */
     public static boolean parse(List<Token<NotationTokenType>> tokens) {
         try {
-            Token<NotationTokenType> word = tokens.remove(0);
-            if (word.token.equals(NotationTokenType.IDENT)) {
-                return ident(tokens);
-            } else {
-                return false;
-            }
+            return Notation(tokens);
         } catch (IndexOutOfBoundsException e) {
             return false;
         }
     }
-    private static boolean ident(List<Token<NotationTokenType>> tokens) {
-        if (tokens.size() < 1) {
+
+    private static boolean Notation(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        tokens.clear();
+        tokens.addAll(backup);
+        if (Slices(tokens) && tokens.size() == 0) {
             return true;
         }
-        Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.DOT)) {
-            return dot(tokens);
-        } else if (word.token.equals(NotationTokenType.LP)) {
-            return LP(tokens);
-        }
-        return false;
-    }
-    private static boolean dot(List<Token<NotationTokenType>> tokens) {
-        Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.IDENT)) {
-            return ident(tokens);
-        }
-        return false;
-    }
-    private static boolean LP(List<Token<NotationTokenType>> tokens) {
-        Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.INDEX)) {
-            return index(tokens);
-        }
-        return false;
-    }
-    private static boolean index(List<Token<NotationTokenType>> tokens) {
-        Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.RP)) {
-            return RP(tokens);
-        }
-        return false;
-    }
-    private static boolean RP(List<Token<NotationTokenType>> tokens) {
-        if (tokens.size() < 1) {
+        tokens.clear();
+        tokens.addAll(backup);
+        if (Slices(tokens) && Dot(tokens) && SubNotation(tokens) && tokens.size() == 0) {
             return true;
         }
-        Token<NotationTokenType> word = tokens.remove(0);
-        if (word.token.equals(NotationTokenType.LP)) {
-            return LP(tokens);
-        } else if (word.token.equals(NotationTokenType.DOT)) {
-            return dot(tokens);
+        tokens.clear();
+        tokens.addAll(backup);
+        if (SubNotation(tokens) && tokens.size() == 0) {
+            return true;
         }
+        tokens.clear();
+        tokens.addAll(backup);
+        return false;
+    }
+
+    private static boolean Slices(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        tokens.clear();
+        tokens.addAll(backup);
+        if (Slice(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        if (Slice(tokens) && Slices(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return true;
+    }
+
+    private static boolean Key(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        if (Pure(tokens) && KeyPrime(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return false;
+    }
+
+    private static boolean KeyPrime(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        if (Slice(tokens) && KeyPrime(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return true;
+    }
+
+    private static boolean SubNotation(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        if (Key(tokens) && Dot(tokens) && SubNotation(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        if (Key(tokens)) {
+            return true;
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return false;
+    }
+
+    private static boolean Dot(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        try {
+            Token<NotationTokenType> token = tokens.remove(0);
+            if (token.type.equals(NotationTokenType.DOT)) {
+                return true;
+            }
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return false;
+    }
+
+    private static boolean Pure(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        try {
+            Token<NotationTokenType> token = tokens.remove(0);
+            if (token.type.equals(NotationTokenType.IDENT)) {
+                return true;
+            }
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+        tokens.clear();
+        tokens.addAll(backup);
+        return false;
+    }
+
+    private static boolean Slice(List<Token<NotationTokenType>> tokens) {
+        List<Token<NotationTokenType>> backup = new ArrayList<>();
+        backup.addAll(tokens);
+        try {
+            Token<NotationTokenType> token = tokens.remove(0);
+            if (token.type.equals(NotationTokenType.LP)) {
+                token = tokens.remove(0);
+                if (token.type.equals(NotationTokenType.INDEX)) {
+                    token = tokens.remove(0);
+                    if (token.type.equals(NotationTokenType.RP)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+        tokens.clear();
+        tokens.addAll(backup);
         return false;
     }
 }
