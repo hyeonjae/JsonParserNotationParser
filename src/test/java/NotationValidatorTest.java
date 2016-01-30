@@ -40,25 +40,29 @@ public class NotationValidatorTest {
         boolean v7 = NotationValidator.parse(this.notationTokenizer.getTokens(notation7));
         Assert.assertTrue(v7);
 
-        String notation8 = "[2].aaa";
-        boolean v8 = NotationValidator.parse(this.notationTokenizer.getTokens(notation8));
-        Assert.assertTrue(v8);
+//        String notation8 = "[2][3][1]";
+//        boolean v8 = NotationValidator.parse(this.notationTokenizer.getTokens(notation8));
+//        Assert.assertTrue(v8);
 
-        String notation9 = "aaa.bbb.ccc[1]";
+        String notation9 = "[2].aaa";
         boolean v9 = NotationValidator.parse(this.notationTokenizer.getTokens(notation9));
         Assert.assertTrue(v9);
 
-        String notation10 = "aaa[1][2].bbb";
+        String notation10 = "aaa.bbb.ccc[1]";
         boolean v10 = NotationValidator.parse(this.notationTokenizer.getTokens(notation10));
         Assert.assertTrue(v10);
 
-        String notation11 = "aaa[1].bbb.ccc[2]";
+        String notation11 = "aaa[1][2].bbb";
         boolean v11 = NotationValidator.parse(this.notationTokenizer.getTokens(notation11));
         Assert.assertTrue(v11);
 
-        String notation12 = "aaa.bbb.abc[1].abc[1][12].abc[1].ccc[*].ddd";
+        String notation12 = "aaa[1].bbb.ccc[2]";
         boolean v12 = NotationValidator.parse(this.notationTokenizer.getTokens(notation12));
         Assert.assertTrue(v12);
+
+        String notation13 = "aaa.bbb.abc[1].abc[1][12].abc[1].ccc[*].ddd";
+        boolean v13 = NotationValidator.parse(this.notationTokenizer.getTokens(notation13));
+        Assert.assertTrue(v13);
     }
 
     @Test

@@ -116,7 +116,7 @@ public class NotationValidator {
             if (token.type.equals(NotationTokenType.DOT)) {
                 return true;
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
 
         }
         tokens.clear();
@@ -132,7 +132,7 @@ public class NotationValidator {
             if (token.type.equals(NotationTokenType.IDENT)) {
                 return true;
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
 
         }
         tokens.clear();
@@ -154,7 +154,7 @@ public class NotationValidator {
                     }
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException ignored) {
 
         }
         tokens.clear();
